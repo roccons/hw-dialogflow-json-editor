@@ -18,7 +18,7 @@ router.get('/files', (req, res) => {
             }
 
             res.status(200).json({
-                files: items
+                files: items.filter(item => !item.includes('usersays'))
             })
         })
     } catch (error) {
