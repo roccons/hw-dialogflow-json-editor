@@ -1,4 +1,10 @@
-# dialogflow-editor
+# HW Dialogflow JSON editor
+
+Editor to modify the _speeches_, _suggestions_ and _redirect_to_blocks_
+(used for [Janis](https://www.janis.ai) + [Chatfuel](https://chatfuel.com) integrations)
+of the Dialogflow intents json files exported
+
+This is a frontend app + bakend api
 
 ## Project setup
 ```
@@ -10,14 +16,14 @@ npm install
 npm run serve
 ```
 
+### Run backend api for development 
+```
+node server.js
+```
+
 ### Compiles and minifies for production
 ```
 npm run build
-```
-
-### Run your tests
-```
-npm run test
 ```
 
 ### Lints and fixes files
@@ -25,10 +31,8 @@ npm run test
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
 ### Produccion
-Run back server and front
-
-` npm start `
+Run backend and fronted server
+```
+npm start
+```
