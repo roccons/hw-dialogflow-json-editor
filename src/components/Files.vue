@@ -12,7 +12,7 @@
             <li v-for="(_fileName, index) in files" 
                 :key="index"
                 @click="openFile(_fileName)"
-                :class="{active: file == current && loaded}">
+                :class="{active: _fileName == current && loaded}">
                 {{ _fileName }}
             </li>
         </ul>
@@ -24,9 +24,7 @@
                         <h5 class="modal-title">Confirm</h5>
                     </div>
                     <div class="modal-body">
-                        <p>
-                            Discard changes?
-                        </p>
+                        <p>Discard changes?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" @click="stay">Cancel</button>

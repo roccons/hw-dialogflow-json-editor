@@ -21,32 +21,40 @@
               {{ error }}
             </div>
 
-            <template v-if="speeches.length > 0">
+            <template v-if="speeches.length > 0 && totalSpeeches > 0">
               <h4>Speeches</h4>
               <div v-for="(msg, index) in speeches" :key="index">
-                <div class="d-flex speeches">
-                  <span class="number">{{ index + 1 }}</span>
-                  <div class="inputs">
-                    <!-- speech can be an array: -->
-                    <template v-if="typeof msg.speech === 'object'">
+                <div class="speeches">
+
+                  <!-- speech can be an array: -->
+                  
+                  <div v-if="typeof msg.speech === 'object'" class="speech">
+                    <template v-if="msg.speech.length > 0">
+                      <span class="number">{{ index + 1 }}</span>
                       <div class="inputs">
-                          <input
-                            type="text"
-                            v-for="(speech, idx) in msg.speech" 
-                            :key="idx"
-                            v-model="msg.speech[idx]"
-                            class="form-control">
-                        </div>
-                        <br>
-                    </template>
-                    <!-- or a string -->
-                    <template v-else>
-                      <input
-                        type="text"
-                        v-model="msg.speech"
-                        class="form-control">
+                        <textarea
+                          rows="1"
+                          v-for="(speech, idx) in msg.speech" 
+                          :key="idx"
+                          v-model="msg.speech[idx]"
+                          class="form-control">
+                          </textarea>
+                      </div>
+                      <br>
                     </template>
                   </div>
+                  
+                  <!-- ...or a string -->
+                  <div class="speech" v-else>
+                    <span class="number">{{ index + 1 }}</span>
+                    <div class="inputs">
+                      <textarea
+                        rows="1"
+                        v-model="msg.speech"
+                        class="form-control"></textarea>
+                    </div>
+                  </div>
+
                 </div>
               </div>
               <hr>
@@ -54,23 +62,23 @@
 
             <template v-if="suggestions.length > 0">
               <h4>Suggestions (Quickreplies)</h4>
-              <input 
-                type="text"
+              <textarea
+                rows="1"
                 v-for="(item, idxs) in suggestions" 
                 :key="idxs + '_'" 
                 v-model="item.title"
-                class="form-control">
+                class="form-control"></textarea>
                 <hr>
             </template>
 
             <template v-if="redirectToBlocks.length > 0">
               <h4>Redirect to blocks</h4>
-              <input 
-                type="text"
+              <textarea
+                rows="1"
                 v-for="(item, index) in redirectToBlocks" 
                 :key="index"
                 v-model="redirectToBlocks[index]"
-                class="form-control">
+                class="form-control"></textarea>
             </template>
 
           </div>
@@ -103,7 +111,8 @@ export default {
       error: '',
       speeches: [],
       suggestions: [],
-      redirectToBlocks: []
+      redirectToBlocks: [],
+      totalSpeeches: 0
     }
   },
 
@@ -121,6 +130,7 @@ export default {
       this.speeches = []
       this.suggestions = []
       this.redirectToBlocks = []
+      this.totalSpeeches = 0
       if (file.responses) { //if it is a valid file
         file.responses[0].messages.forEach(msg => {
           // suggestions (quickreplies)
@@ -137,6 +147,14 @@ export default {
             this.redirectToBlocks = msg.payload.redirect_to_blocks
           }
         });
+
+        file.responses[0].messages.forEach(msg => {
+          if (msg.type === 0) {
+            if (msg.speech.length > 0) {
+              this.totalSpeeches++
+            }
+          }
+        })
       }
     },
 
@@ -183,7 +201,21 @@ export default {
     box-shadow: 0 0.1em 0.1em rgba(0,0,0,0.1);
   }
 }
-.inputs {
-  width: 100%;
+
+.speeches {
+  .speech {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1em;
+    .inputs {
+      width: 100%;
+    }
+  }
+}
+
+.number {
+  font-size: 250%;
+  display: inline-block;
+  padding-right: 0.25em;
 }
 </style>
