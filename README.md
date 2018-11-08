@@ -39,6 +39,11 @@ You have to install `serve` first
 ```
 npm install -g serve
 ```
+Build
+```
+npm run build
+```
+
 Then run
 
 ```
