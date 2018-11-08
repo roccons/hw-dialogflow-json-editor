@@ -16,33 +16,12 @@
                 {{ _fileName }}
             </li>
         </ul>
-
-        <div class="modal fade" tabindex="-1" role="dialog" id="confirm-dialog">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Confirm</h5>
-                    </div>
-                    <div class="modal-body">
-                        <p>Discard changes?</p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" @click="stay">Cancel</button>
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" @click="discard">
-                            Accept
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 </template>
 
 <script>
 import axios from 'axios'
 import config from '../../config/app.js'
-import $ from 'jquery'
 
 export default {
     data () {
@@ -107,23 +86,10 @@ export default {
         openFile (fileName) {
             this.next = fileName
             if (this.next !== this.current) {
-                if (this.opened) {
-                    $('#confirm-dialog').modal()
-                } else {
-                    this.loadFile(fileName)
-                }
+                this.loadFile(fileName)
             }
         },
 
-        // stay editing the file
-        stay () {
-            $('#confirm-dialog').modal('hide')
-        },
-
-        // discard changes and move to the next file
-        discard () {
-            this.loadFile(this.next)
-        }
     }
 }
 </script>

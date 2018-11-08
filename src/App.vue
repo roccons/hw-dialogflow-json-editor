@@ -33,7 +33,7 @@
                       <span class="number">{{ index + 1 }}</span>
                       <div class="inputs">
                         <textarea
-                          rows="1"
+                          rows="2"
                           v-for="(speech, idx) in msg.speech" 
                           :key="idx"
                           v-model="msg.speech[idx]"
@@ -49,7 +49,7 @@
                     <span class="number">{{ index + 1 }}</span>
                     <div class="inputs">
                       <textarea
-                        rows="1"
+                        rows="2"
                         v-model="msg.speech"
                         class="form-control"></textarea>
                     </div>
@@ -168,7 +168,7 @@ export default {
       .then(() => {
         this.saved = true
         this.error = null
-        setTimeout(() => { this.saved = false }, 5000)
+        setTimeout(() => { this.saved = false }, 10000)
       })
       .catch(err => {
         this.error = err.response ? err.response.data.message : err
