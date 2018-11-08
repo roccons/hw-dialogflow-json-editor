@@ -30,9 +30,21 @@ npm run build
 ```
 npm run lint
 ```
+---
+### Run both servers
+If you don't need to run backend and frontend servers independently (development mode),
+you can run both.
 
-### Produccion
-Run backend and fronted server
+You have to install `serve` first
+```
+npm install -g serve
+```
+Then run
+
 ```
 npm start
 ```
+
+And go to http://localhost:5000
+
+_Note_: this will not compile any file

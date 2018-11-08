@@ -165,7 +165,7 @@ export default {
         file: this.path + '/' + this.fileName,
         newData: this.file
       })
-      .then(res => {
+      .then(() => {
         this.saved = true
         this.error = null
         setTimeout(() => { this.saved = false }, 5000)
