@@ -106,6 +106,7 @@ export default {
     return {
       file: {}, // json object
       fileName: '',
+      path: null,
       loaded: false,
       saved: false,
       error: '',
@@ -122,6 +123,7 @@ export default {
   
   methods: {
     loadFile (fileName, file) {
+      this.getPath()
       this.error = null
       this.loaded = true
       this.saved = false
@@ -174,6 +176,12 @@ export default {
         this.error = err.response ? err.response.data.message : err
       })
     },
+
+    getPath () {
+      if (this.path === null || this.path === 'null') {
+        this.path = localStorage.getItem('path')
+      }
+    }
 
   }
 }
