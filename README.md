@@ -51,5 +51,3 @@ npm start
 ```
 
 And go to http://localhost:5000
-
-_Note_: this will not compile any file
