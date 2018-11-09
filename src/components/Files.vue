@@ -2,8 +2,6 @@
     <div>
         <div class="title">
             <input type="text" v-model="path" class="form-control" placeholder="/path/dir/" @keypress.enter="loadFiles">
-            <!-- this input is a helper to select a path (not for select a file) -->
-            <input type="file" name="files" class="form-control-file"> 
         </div>
         <div v-if="error" class="alert alert-danger">
             {{ error }}
