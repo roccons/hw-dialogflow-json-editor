@@ -32,13 +32,23 @@
                     <template v-if="msg.speech.length > 0">
                       <span class="number">{{ index + 1 }}</span>
                       <div class="inputs">
-                        <textarea
-                          rows="2"
-                          v-for="(speech, idx) in msg.speech" 
-                          :key="idx"
-                          v-model="msg.speech[idx]"
-                          class="form-control">
-                          </textarea>
+                        <div class="input" v-for="(speech, idx) in msg.speech" :key="idx" >
+                          <textarea
+                            rows="2"
+                            v-model="msg.speech[idx]"
+                            class="form-control"></textarea>
+                          <button class="btn btn-danger btn-sm"
+                            v-if="msg.speech.length > 1"
+                            @click="removeSpeechResponse(msg.speech, idx)">
+                            &times;
+                          </button>
+                        </div>
+                        <div class="input">
+                          <textarea rows="2" class="form-control"></textarea>
+                          <button class="btn btn-success btn-sm" @click="addSpeechResponse($event, speeches[index], true)">
+                            +
+                          </button>
+                        </div>
                       </div>
                       <br>
                     </template>
@@ -48,15 +58,25 @@
                   <div class="speech" v-else>
                     <span class="number">{{ index + 1 }}</span>
                     <div class="inputs">
-                      <textarea
-                        rows="2"
-                        v-model="msg.speech"
-                        class="form-control"></textarea>
+                      <div class="input">
+                        <textarea
+                          rows="2"
+                          v-model="msg.speech"
+                          class="form-control"></textarea>
+                      </div>
+                      <div class="input">
+                        <textarea rows="2" class="form-control" ></textarea>
+                          <button class="btn btn-success btn-sm" @click="addSpeechResponse($event, speeches[index])">
+                            +
+                          </button>
+                      </div>
                     </div>
                   </div>
 
+
                 </div>
               </div>
+              <button class="btn btn-success" @click="addSpeech">+ Add speech</button>
               <hr>
             </template>
 
@@ -113,7 +133,7 @@ export default {
       speeches: [],
       suggestions: [],
       redirectToBlocks: [],
-      totalSpeeches: 0
+      totalSpeeches: 0,
     }
   },
 
@@ -150,6 +170,7 @@ export default {
           }
         });
 
+        // get total speeches to dont show them if have no items
         file.responses[0].messages.forEach(msg => {
           if (msg.type === 0) {
             if (msg.speech.length > 0) {
@@ -163,6 +184,11 @@ export default {
     // the data edited is an array, so javascript modify the original and we can 
     // send this.file as data 
     save () {
+      let messages = this.file.responses[0].messages.filter(m => m.type !== 0)
+      messages = messages.concat(this.speeches)
+
+      this.file.responses[0].messages = messages
+
       axios.post(config.server + '/file', {
         file: this.path + '/' + this.fileName,
         newData: this.file
@@ -181,6 +207,32 @@ export default {
       if (this.path === null || this.path === 'null') {
         this.path = localStorage.getItem('path')
       }
+    },
+
+    addSpeechResponse (e, speech, isArray) {
+      const el = e.target.previousElementSibling
+      if (!el.value) {
+        return
+      }
+      if (isArray) {
+        speech.speech.push(el.value)
+      } else {
+        speech.speech = [speech.speech, el.value]
+      }
+      el.value = ''
+      el.focus()
+    },
+
+    removeSpeechResponse (array, index) {
+      array.splice(index, 1)
+    },
+
+    addSpeech () {
+      this.speeches.push({
+        type: 0,
+        lang: 'es',
+        speech: ['-- change this --']
+      })
     }
 
   }
@@ -217,6 +269,13 @@ export default {
     margin-bottom: 1em;
     .inputs {
       width: 100%;
+      .input {
+        display: flex;
+        align-items: flex-start;
+        button {
+          position: relative;
+        }
+      }
     }
   }
 }
