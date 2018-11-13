@@ -30,24 +30,29 @@
                   
                   <div v-if="typeof msg.speech === 'object'" class="speech">
                     <template v-if="msg.speech.length > 0">
-                      <span class="number">{{ index + 1 }}</span>
+                      <div class="number">
+                        <span>{{ index + 1 }}</span>
+                        <button @click="deleteSpeech(index)" class="btn btn-sm" title="delete">
+                          <span class="icon-bin"></span>
+                        </button>
+                      </div>
                       <div class="inputs">
                         <div class="input" v-for="(speech, idx) in msg.speech" :key="idx" >
                           <textarea
                             rows="2"
+                            placeholder="Enter a text response variant"
                             v-model="msg.speech[idx]"
                             class="form-control"></textarea>
-                          <button class="btn btn-danger btn-sm"
+                          <button class="btn" title="delete"
                             v-if="msg.speech.length > 1"
                             @click="removeSpeechResponse(msg.speech, idx)">
-                            &times;
+                            <span class="icon-bin"></span>
                           </button>
                         </div>
-                        <div class="input">
-                          <textarea rows="2" class="form-control"></textarea>
-                          <button class="btn btn-success btn-sm" @click="addSpeechResponse($event, speeches[index], true)">
-                            +
-                          </button>
+                        <div class="input add">
+                          <textarea 
+                            rows="2" class="form-control" placeholder="Enter a text response variant"
+                            @keypress.enter="addSpeechResponse($event, speeches[index], true)"></textarea>
                         </div>
                       </div>
                       <br>
@@ -56,19 +61,26 @@
                   
                   <!-- ...or a string -->
                   <div class="speech" v-else>
-                    <span class="number">{{ index + 1 }}</span>
+                    <div class="number">
+                      <span>{{ index + 1 }}</span>
+                      <button @click="deleteSpeech(index)" class="btn btn-sm" title="delete">
+                          <span class="icon-bin"></span>
+                      </button>
+                    </div>
+
                     <div class="inputs">
                       <div class="input">
                         <textarea
                           rows="2"
+                          placeholder="Enter a text response variant"
                           v-model="msg.speech"
                           class="form-control"></textarea>
                       </div>
-                      <div class="input">
-                        <textarea rows="2" class="form-control" ></textarea>
-                          <button class="btn btn-success btn-sm" @click="addSpeechResponse($event, speeches[index])">
-                            +
-                          </button>
+                      <div class="input add" v-if="msg.speech">
+                        <textarea
+                          rows="2" class="form-control" placeholder="Enter a text response variant"
+                          @keypress.enter="addSpeechResponse($event, speeches[index])"></textarea>
+                          <br>
                       </div>
                     </div>
                   </div>
@@ -76,6 +88,7 @@
 
                 </div>
               </div>
+              <br>
               <button class="btn btn-success" @click="addSpeech">+ Add speech</button>
               <hr>
             </template>
@@ -110,6 +123,11 @@
     </div>
   </div>
 </template>
+<style lang="scss">
+  @import "scss/index.scss";
+</style>
+
+
 
 <script>
 import Files from './components/Files.vue'
@@ -210,7 +228,8 @@ export default {
     },
 
     addSpeechResponse (e, speech, isArray) {
-      const el = e.target.previousElementSibling
+      e.preventDefault()
+      const el = e.target
       if (!el.value) {
         return
       }
@@ -231,58 +250,14 @@ export default {
       this.speeches.push({
         type: 0,
         lang: 'es',
-        speech: ['-- change this --']
+        speech: ''
       })
+    },
+
+    deleteSpeech (index) {
+      this.speeches.splice(index, 1)
     }
 
   }
 }
 </script>
-
-<style lang="scss">
-
-#app, .row {
-  height: 100vh;;
-}
-
-.files {
-  background: var(--dark);
-  min-height: 100%;
-  padding: 0 !important;
-  overflow: auto;
-}
-.editor {
-  background: var(--light);
-  min-height: 100%;
-  overflow: auto;
-  padding: 0 !important;
-  .title {
-    background: white;
-    box-shadow: 0 0.1em 0.1em rgba(0,0,0,0.1);
-  }
-}
-
-.speeches {
-  .speech {
-    display: flex;
-    align-items: center;
-    margin-bottom: 1em;
-    .inputs {
-      width: 100%;
-      .input {
-        display: flex;
-        align-items: flex-start;
-        button {
-          position: relative;
-        }
-      }
-    }
-  }
-}
-
-.number {
-  font-size: 250%;
-  display: inline-block;
-  padding-right: 0.25em;
-}
-</style>
