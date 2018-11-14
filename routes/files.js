@@ -80,7 +80,7 @@ router.post('/file', (req, res) => {
                 message: 'There is no content to save'
             })
         }
-        fs.writeFileSync(fileName, JSON.stringify(newData))
+        fs.writeFileSync(fileName, JSON.stringify(newData, null, 2))
 
         res.status(200).json({
             message: 'File saved successfully'

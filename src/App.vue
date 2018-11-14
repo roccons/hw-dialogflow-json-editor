@@ -29,10 +29,12 @@
                   <!-- speech can be an array: -->
                   
                   <div v-if="typeof msg.speech === 'object'" class="speech">
-                    <template v-if="msg.speech.length > 0">
+                    <template v-if="msg.speech.length >= 0">
                       <div class="number">
                         <span>{{ index + 1 }}</span>
-                        <button @click="deleteSpeech(index)" class="btn btn-sm" title="delete">
+                        <button v-if="speeches.length > 1" 
+                          @click="deleteSpeech(index)" 
+                          class="btn btn-sm" title="delete">
                           <span class="icon-bin"></span>
                         </button>
                       </div>
@@ -63,7 +65,10 @@
                   <div class="speech" v-else>
                     <div class="number">
                       <span>{{ index + 1 }}</span>
-                      <button @click="deleteSpeech(index)" class="btn btn-sm" title="delete">
+                      <button 
+                        v-if="speeches.length > 1"
+                        @click="deleteSpeech(index)" 
+                        class="btn btn-sm" title="delete">
                           <span class="icon-bin"></span>
                       </button>
                     </div>
@@ -250,7 +255,7 @@ export default {
       this.speeches.push({
         type: 0,
         lang: 'es',
-        speech: ''
+        speech: []
       })
     },
 

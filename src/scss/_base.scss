@@ -47,6 +47,9 @@
                 left: 0;
                 z-index: 10;
             }
+            textarea {
+              background: #eeeeee;
+            }
           }
           button {
               background: var(--light);
