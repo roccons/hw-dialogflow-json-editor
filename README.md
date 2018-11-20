@@ -51,3 +51,8 @@ npm start
 ```
 
 And go to http://localhost:5000
+
+### Todo
+
+The current version assigns the Spanish language to the new speech.
+Make it take the language of the first speech of the json itself.
