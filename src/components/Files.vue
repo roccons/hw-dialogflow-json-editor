@@ -13,6 +13,9 @@
         <div v-if="error" class="alert alert-danger">
             {{ error }}
         </div>
+        <div v-if="messageAlert" class="alert alert-info">
+            {{ messageAlert }}
+        </div>
         <ul v-if="files.length > 0">
             <li v-for="(_fileName, index) in files" 
                 :key="index"
@@ -34,13 +37,10 @@
                     </div>
                     <div class="modal-body">
                         <label for="">Write a valid path</label>
-                        <input type="text" v-model="newPath" placeholder="path/dir" class="form-control">
+                        <input type="text" v-model="newPath" placeholder="path/dir" class="form-control" @keypress.enter="setNewPath">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            Cancel
-                        </button>
-                        <button type="button" class="btn btn-primary" @click="setNewPath()" data-dismiss="modal">
+                        <button type="button" class="btn btn-primary" @click="setNewPath">
                             Save dir
                         </button>
                     </div>
@@ -59,13 +59,10 @@
                     </div>
                     <div class="modal-body">
                         <label for="">Search</label>
-                        <input type="text" v-model="toSearch" placeholder="search" class="form-control">
+                        <input type="text" v-model="toSearch" placeholder="search" class="form-control" @keypress.enter="search">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            Cancel
-                        </button>
-                        <button type="button" class="btn btn-primary" @click="search()" data-dismiss="modal">
+                        <button type="button" class="btn btn-primary" @click="search">
                             Search
                         </button>
                     </div>
@@ -79,6 +76,7 @@
 <script>
 import axios from 'axios'
 import config from '../../config/app.js'
+import $ from 'jquery'
 
 export default {
     data () {
@@ -95,6 +93,7 @@ export default {
             opened: false,
             current: '',
             next: '',
+            messageAlert: '',
             error: ''
         }
     },
@@ -109,6 +108,7 @@ export default {
 
         // get the list of files from the api server
         loadFiles () {
+            this.messageAlert = ''
             this.files = []
             this.error = ''
             localStorage.setItem('path', this.path)
@@ -121,6 +121,10 @@ export default {
               .then(res => {
                   this.files = res.data.files.filter(f => !f.includes('usersays'))
                   this.allFiles = this.files
+
+                  if (this.files.length === 0) {
+                      this.messageAlert = "No results"
+                  }
               })
               .catch(err => {
                   this.error = err.response ? err.response.data.message : err
@@ -159,17 +163,21 @@ export default {
         setNewPath () {
             this.path = this.newPath
             this.loadFiles()
+            $('#open-dir-modal').modal('hide')
         },
 
         search () {
             this.loadFiles()
+            $('#search-modal').modal('hide')
         }
 
     },
 
     watch: {
         filter (val) {
-            this.files = this.allFiles.filter(file => file.includes(val))
+            val = val.toLowerCase()
+            this.files = this.allFiles
+                             .filter(file => file.toLowerCase().includes(val))
         }
     }
 }

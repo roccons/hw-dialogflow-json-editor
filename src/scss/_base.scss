@@ -22,17 +22,24 @@
   .readonly-blocks {
     margin-bottom: 30px;
     .readonly-block {
-      border: 1px solid #bbb;
-      padding: 4px 8px;
-      background: rgba(white, 0.1);
-      border-top: none;
-      &:nth-child(2) {
-        border-top: 1px solid #bbb;
-        border-radius: 5px 5px 0 0;
+      padding: 0 8px;
+      border-radius: 3px;
+      margin-right: 4px;
+      margin-bottom: 4px;
+      background: rgba(#AAA, 0.3);
+      display: inline-block;
+      &:after {
+        content: ' ';
       }
-      &:last-child {
-        border-radius: 0 0 5px 5px;
+      &:last-child:after {
+        content: '';
       }
+    }
+    .quickreply {
+      padding: 2px 8px;
+      background: rgba(#ddd, 0.8);
+      border: 1px solid #ddd;
+      border-radius: 8px;
     }
   }
   

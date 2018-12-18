@@ -28,9 +28,9 @@
 
             <div class="readonly-blocks" v-if="userSays && userSays.length">
               <h4>Training Phrases</h4>
-              <div class="readonly-block" v-for="(trainingPhrase, index) in userSays" :key="index">
+              <span class="readonly-block" v-for="(trainingPhrase, index) in userSays" :key="index">
                 {{ trainingPhrase.data.map(phrase => phrase.text).join(' | ')}}
-              </div>
+              </span>
             </div>
 
             <hr>
@@ -131,12 +131,13 @@
                 :key="index"
                 v-model="redirectToBlocks[index]"
                 class="form-control"></textarea>
+                <hr>
             </template>
 
             <template v-if="fbQuickReplies && fbQuickReplies.length > 0">
               <div class="readonly-blocks">
                 <h4>Quick Replies (Facebook)</h4>
-                <div class="readonly-block" v-for="(fbReply, idx) in fbQuickReplies" :key="idx">
+                <div class="readonly-block quickreply" v-for="(fbReply, idx) in fbQuickReplies" :key="idx">
                   {{ fbReply }}
                 </div>
               </div>
@@ -195,7 +196,7 @@ export default {
   methods: {
     loadFile (fileName, file, userSays) {
       this.getPath()
-      this.userSays = userSays
+      this.userSays = typeof userSays === 'object' ? userSays.slice(0, 6) : []
       this.error = null
       this.disabled = true
       this.loaded = true
@@ -205,6 +206,7 @@ export default {
       this.speeches = []
       this.suggestions = []
       this.redirectToBlocks = []
+      this.fbQuickReplies = []
       this.totalSpeeches = 0
       if (file.responses) { //if it is a valid file
         file.responses[0].messages.forEach(msg => {
