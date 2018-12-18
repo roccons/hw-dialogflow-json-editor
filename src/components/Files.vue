@@ -26,7 +26,7 @@
             </li>
         </ul>
 
-        <div class="modal" role="dialog" id="open-dir-modal">
+        <div class="modal fade" tabindex="-1" role="dialog" id="open-dir-modal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -37,7 +37,13 @@
                     </div>
                     <div class="modal-body">
                         <label for="">Write a valid path</label>
-                        <input type="text" v-model="newPath" placeholder="path/dir" class="form-control" @keypress.enter="setNewPath">
+                        <input type="text" 
+                            v-model="newPath" 
+                            placeholder="path/dir" 
+                            class="form-control" 
+                            ref="newPath"
+                            autofocus
+                            @keypress.enter="setNewPath">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" @click="setNewPath">
@@ -48,7 +54,7 @@
             </div>
         </div>
 
-        <div class="modal" role="dialog" id="search-modal">
+        <div class="modal fade" tabindex="-1" role="dialog" id="search-modal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -59,7 +65,13 @@
                     </div>
                     <div class="modal-body">
                         <label for="">Search</label>
-                        <input type="text" v-model="toSearch" placeholder="search" class="form-control" @keypress.enter="search">
+                        <input type="text" 
+                            v-model="toSearch" 
+                            ref="search"
+                            placeholder="search" 
+                            class="form-control" 
+                            autofocus
+                            @keypress.enter="search">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" @click="search">
@@ -102,6 +114,11 @@ export default {
         this.path = localStorage.getItem('path')
         this.newPath = this.path
         this.loadFiles()
+
+        $('.modal').on('shown.bs.modal', () => {
+            this.$refs.search.focus()
+            this.$refs.newPath.focus()
+        });
     },
 
     methods: {
