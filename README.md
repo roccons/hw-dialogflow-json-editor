@@ -6,6 +6,14 @@ of the Dialogflow intents json files exported
 
 This is a frontend app + bakend api
 
+You can configure any text editor (or other app) to open the json files in
+`config/app.js`. Just set the full path of your text editor's executable:
+```
+ - win32: for windows
+ - linux: for linux
+ - darwin: for mac
+```
+
 ## Project setup
 ```
 npm install
