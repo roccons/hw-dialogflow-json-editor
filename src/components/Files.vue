@@ -1,7 +1,14 @@
 <template>
     <div>
-        <div class="title">
-            <input type="text" v-model="path" class="form-control" placeholder="/path/dir/" @keypress.enter="loadFiles">
+        <div class="path d-flex justify-content-between align-items-center">
+            <span :title="path">{{ path }}</span>
+            <div>
+                <button class="btn btn-sm mr-1" title="Open directory" data-toggle="modal" data-target="#open-dir-modal">📁</button>
+                <button class="btn btn-sm" title="Search in all files" data-toggle="modal" data-target="#search-modal">🔎</button>
+            </div>
+        </div>
+        <div class="filter">
+            <input type="text" v-model="filter" class="form-control" placeholder="Filter file">
         </div>
         <div v-if="error" class="alert alert-danger">
             {{ error }}
@@ -9,11 +16,63 @@
         <ul v-if="files.length > 0">
             <li v-for="(_fileName, index) in files" 
                 :key="index"
+                :title="_fileName"
                 @click="openFile(_fileName)"
                 :class="{active: _fileName == current && loaded}">
                 {{ _fileName }}
             </li>
         </ul>
+
+        <div class="modal" role="dialog" id="open-dir-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Open directory</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="">Write a valid path</label>
+                        <input type="text" v-model="newPath" placeholder="path/dir" class="form-control">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="setNewPath()" data-dismiss="modal">
+                            Save dir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" role="dialog" id="search-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Search in files</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <label for="">Search</label>
+                        <input type="text" v-model="toSearch" placeholder="search" class="form-control">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                            Cancel
+                        </button>
+                        <button type="button" class="btn btn-primary" @click="search()" data-dismiss="modal">
+                            Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -24,9 +83,14 @@ import config from '../../config/app.js'
 export default {
     data () {
         return {
+            newPath: '',
             path: '',
+            filter: '',
             files: [],
+            allFiles: [],
+            userSays: [],
             file: '',
+            toSearch: '',
             loaded: false,
             opened: false,
             current: '',
@@ -37,6 +101,7 @@ export default {
 
     mounted () {
         this.path = localStorage.getItem('path')
+        this.newPath = this.path
         this.loadFiles()
     },
 
@@ -49,11 +114,13 @@ export default {
             localStorage.setItem('path', this.path)
             axios.get(config.server + '/files', {
                 params: {
-                    path: this.path
+                    path: this.path,
+                    toSearch: this.toSearch
                 }
             })
               .then(res => {
-                  this.files = res.data.files
+                  this.files = res.data.files.filter(f => !f.includes('usersays'))
+                  this.allFiles = this.files
               })
               .catch(err => {
                   this.error = err.response ? err.response.data.message : err
@@ -70,7 +137,8 @@ export default {
             })
             .then (res => {
                 this.file = JSON.parse(res.data.file) // file content
-                this.$emit('loadFile', fileName, this.file)
+                this.userSays = JSON.parse(res.data.userSaysFile)
+                this.$emit('loadFile', fileName, this.file, this.userSays)
                 this.loaded = true
                 this.opened = true
             })
@@ -88,26 +156,58 @@ export default {
             }
         },
 
+        setNewPath () {
+            this.path = this.newPath
+            this.loadFiles()
+        },
+
+        search () {
+            this.loadFiles()
+        }
+
+    },
+
+    watch: {
+        filter (val) {
+            this.files = this.allFiles.filter(file => file.includes(val))
+        }
     }
 }
 </script>
 
 <style lang="scss" scoped>
 
-.title {
+.path {
     background: var(--gray);
     color: white;
-    padding: 0.25em 0.5em;
+    padding: 0.25em;
+    font-size: 85%;
+    font-style: italic;
     span {
-        font-style: italic;
+        display: inline-block;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
+    > div {
+        text-align: right;
+        width: 150px;
+    }
+}
+.filter {
+    background: var(--gray);
+    padding: 0;
+
 }
 ul {
     padding: 0;
     li {
         color: white;
+        overflow: hidden;
+        width: 100%;
         padding: 0.1em 0 0.1em 1em;
         border-top: 1px solid rgba(#000, 0.1);
+        text-overflow: ellipsis;
         cursor: pointer;
         &:hover {
             background: var(--gray);
