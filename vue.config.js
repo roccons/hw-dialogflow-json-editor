@@ -14,10 +14,11 @@ module.exports = {
         chunkFilename: '[name].js'
       },
 
-      // optimization: {
-      //   splitChunks: {
-      //     maxSize: 240000,
-      //   }
-      // }
+      optimization: {
+        splitChunks: {
+          // maxSize: 240000,
+          chunks: 'all'
+        }
+      }
     }
   }

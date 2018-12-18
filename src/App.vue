@@ -160,14 +160,13 @@
 
 
 <script>
-import Files from './components/Files.vue'
 import axios from 'axios'
 import config from '../config/app.js'
 
 export default {
   name: 'app',
   components: {
-    Files
+    Files: () => import('./components/Files.vue')
   },
 
   data () {

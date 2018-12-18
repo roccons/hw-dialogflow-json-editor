@@ -87,8 +87,8 @@
 
 <script>
 import axios from 'axios'
-import config from '../../config/app.js'
 import $ from 'jquery'
+import config from '../../config/app'
 
 export default {
     data () {
