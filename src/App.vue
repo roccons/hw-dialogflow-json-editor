@@ -29,7 +29,7 @@
             <div class="readonly-blocks" v-if="userSays && userSays.length">
               <h4>Training Phrases</h4>
               <span class="readonly-block" v-for="(trainingPhrase, index) in userSays" :key="index">
-                {{ trainingPhrase.data.map(phrase => phrase.text).join(' | ')}}
+                {{ trainingPhrase.data.map(phrase => phrase.text).join(' ')}}
               </span>
             </div>
 
@@ -196,9 +196,10 @@ export default {
   methods: {
     loadFile (fileName, file, userSays) {
       this.getPath()
-      this.userSays = typeof userSays === 'object' ? userSays.slice(0, 6) : []
+      this.userSays = typeof userSays === 'object' && userSays !== null ? userSays.slice(0, 6) : []
       this.error = null
       this.disabled = true
+      this.openDisabled = false
       this.loaded = true
       this.saved = false
       this.fileName = fileName

@@ -1,7 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const fs = require('fs')
-const config = require('../config/app')
+const config = require('../config/server')
 
 // return the list of files from the directory given
 router.get('/files', (req, res) => {
@@ -145,13 +145,16 @@ router.post('/file/exec', (req, res) => {
         res.status(422).json({
             message: 'The file path is required',
         })
+        return
     }
 
     try {
-        exec(`${editor} ${fileName}`, (err) => { 
+        exec(`${editor} "${fileName}"`, err => { 
             if (err) throw err
 
-            res.status(201)
+            res.status(200).json({
+                message: 'File opened'
+            })
         })
     } catch (err) {
         res.status(500).json({
