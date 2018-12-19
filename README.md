@@ -1,8 +1,7 @@
 # HW Dialogflow JSON editor
 
 Editor to modify the _speeches_, _suggestions_ and _redirect_to_blocks_
-(used for [Janis](https://www.janis.ai) + [Chatfuel](https://chatfuel.com) integrations)
-of the Dialogflow intents json files exported
+(used for [Janis](https://www.janis.ai) + [Chatfuel](https://chatfuel.com) integrations) of Dialogflow intents. In order to use it you need to use the export options in Dialogflow console, then use this editor to modify the json files, and finally import your agent intents again into Dialogflow.
 
 This is a frontend app + bakend api
 
