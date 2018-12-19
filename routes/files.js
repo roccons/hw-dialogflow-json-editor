@@ -134,18 +134,19 @@ router.post('/file', (req, res) => {
 router.post('/file/exec', (req, res) => {
 
     const exec = require('child_process').exec
-    const fileName = req.body.file
-    let editor = req.body.textEditor
-
-    if (!editor) {
-        editor = config.textEditor[process.platform] 
-    }
+    const editor = config.textEditor[process.platform] 
+    let fileName = req.body.file
 
     if (!fileName) {
         res.status(422).json({
             message: 'The file path is required',
         })
         return
+    }
+    
+    if (req.body.type === 'userSays') {
+
+        fileName = fileName.substring(0, fileName.length - 5) + '_usersays_es.json'
     }
 
     try {

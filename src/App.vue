@@ -6,16 +6,20 @@
           <Files @loadFile="loadFile"></Files>
         </div>
         <div class="editor col-sm-9" v-if="loaded" @keypress="disabled=false">
-          <div class="title d-flex justify-content-between px-3 py-3">
-            <h2>{{ file.name || ''}}</h2>
-            <div>
-              <button class="btn mr-2" @click="openFile" :disabled="openDisabled">
-                Open 
-              </button>
-              <button class="btn btn-primary" @click="save" :disabled="disabled">
-                Save
+          <div class="title d-flex justify-content-between align-items-center px-3 py-3">
+            <div class="d-flex justify-content-between align-items-center">
+              <h2 class="mr-3">{{ file.name || ''}}</h2>
+              <button class="btn btn-light btn-sm mr-2" @click="openFile" :disabled="openDisabled">
+                Open
               </button>
             </div>
+            <button 
+              class="btn btn-primary" 
+              :class="{ 'btn-outline-primary': disabled}" 
+              @click="save" 
+              :disabled="disabled">
+              Save
+            </button>
           </div>
           <div class="px-3 py-3">
 
@@ -27,7 +31,12 @@
             </div>
 
             <div class="readonly-blocks" v-if="userSays && userSays.length">
-              <h4>Training Phrases</h4>
+              <div class="d-flex align-items-center mb-2">
+                <h4 class="mr-3">Training Phrases</h4>
+                <button class="btn btn-sm btn-light" @click="openFile('userSays')">
+                  (Open)
+                </button>
+              </div>
               <span class="readonly-block" v-for="(trainingPhrase, index) in userSays" :key="index">
                 {{ trainingPhrase.data.map(phrase => phrase.text).join(' ')}}
               </span>
@@ -304,9 +313,12 @@ export default {
       this.speeches.splice(index, 1)
     },
 
-    openFile () {
+    openFile (type) {
       this.openDisabled = true
-      axios.post(config.server + '/file/exec', { file: this.path + '/' + this.fileName, })
+      axios.post(config.server + '/file/exec', { 
+        file: this.path + '/' + this.fileName, 
+        type: type
+      })
       .then(() => {
         this.openDisabled = false
       })
