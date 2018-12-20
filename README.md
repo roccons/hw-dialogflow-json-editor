@@ -1,7 +1,7 @@
 # HW Dialogflow JSON editor
 
 Editor to modify the _speeches_, _suggestions_ and _redirect_to_blocks_
-(used for [Janis](https://www.janis.ai) + [Chatfuel](https://chatfuel.com) integrations) of Dialogflow intents. In order to use it you need to use the export options in Dialogflow console, then use this editor to modify the json files, and finally import your agent intents again into Dialogflow.
+(used for [Janis](https://www.janis.ai) + [Chatfuel](https://chatfuel.com) integrations) of Dialogflow intents.
 
 This is a frontend app + bakend api
 
@@ -58,6 +58,17 @@ npm start
 ```
 
 And go to http://localhost:5000
+
+![HW Dialogflow Editor](screenshots/hw-dialogflow-editor.jpg)
+
+### Instructions for use:
+
+1. From Dialogflow's console export agent as zip
+2. Unzip the zip in a local folder
+3. In the editor indicate the path to the folder containing the json files
+4. Use the editor to modify the editable fields
+5. Create a new zip with the modified json files
+6. Import intents in Dialogflow using Restore from zip option or Import from zip as deemed convenient
 
 ### Todo
 
